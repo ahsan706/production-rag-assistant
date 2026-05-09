@@ -12,6 +12,7 @@ from app.core.config import settings
 from app.db.session import SessionLocal
 from app.models.document import Document
 from app.models.ingestion_job import IngestionJob
+from app.services.chunks import replace_document_chunks
 from app.services.extraction import EmptyDocumentError, extract_text
 
 celery_app = Celery("production_rag_worker", broker=settings.redis_url, backend=settings.redis_url)
@@ -62,19 +63,27 @@ def process_document(self, job_id: str) -> str:
         extraction_dir.mkdir(parents=True, exist_ok=True)
         extracted_path = extraction_dir / f"{document.id}.txt"
         extracted_path.write_text(text, encoding="utf-8")
+        chunks = replace_document_chunks(db, document, text)
 
         metadata = dict(document.document_metadata or {})
         metadata["extraction"] = {
             "text_path": str(extracted_path),
             "character_count": len(text),
         }
+        metadata["chunking"] = {
+            "strategy": "fixed_token_window",
+            "chunk_tokens": 800,
+            "overlap_tokens": 150,
+            "chunk_count": len(chunks),
+        }
         document.document_metadata = metadata
         flag_modified(document, "document_metadata")
         document.extracted_text_path = str(extracted_path)
-        document.status = "ready"
+        document.status = "chunked"
         job.status = "succeeded"
         job.completed_at = datetime.now(timezone.utc)
         _log(job, f"Extraction completed with {len(text)} characters.")
+        _log(job, f"Chunking completed with {len(chunks)} chunks.")
         db.commit()
         return str(document.id)
     except EmptyDocumentError as exc:
