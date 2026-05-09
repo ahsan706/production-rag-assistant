@@ -10,6 +10,7 @@ from app.db.session import get_db
 from app.models.document import Document
 from app.schemas.document import DocumentRead, DocumentUploadResponse
 from app.services.documents import save_document_upload
+from app.services.ingestion import create_ingestion_job
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
@@ -20,6 +21,9 @@ def upload_document(
     db: Session = Depends(get_db),
 ) -> DocumentUploadResponse:
     document, duplicate = save_document_upload(db, file)
+    if not duplicate:
+        create_ingestion_job(db, document)
+        db.refresh(document)
     return DocumentUploadResponse(document=DocumentRead.model_validate(document), duplicate=duplicate)
 
 

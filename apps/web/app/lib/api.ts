@@ -10,6 +10,7 @@ export type DocumentRecord = {
   checksum_sha256: string;
   status: string;
   error_message: string | null;
+  extracted_text_path: string | null;
   document_metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;

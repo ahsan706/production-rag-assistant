@@ -60,6 +60,12 @@ export default function DocumentDetailsPage() {
                 </dd>
               </div>
               <div>
+                <dt className="text-sm font-medium text-slate-500">Extracted text</dt>
+                <dd className="mt-1 break-all font-mono text-sm text-slate-900">
+                  {document.extracted_text_path ?? "Not available"}
+                </dd>
+              </div>
+              <div>
                 <dt className="text-sm font-medium text-slate-500">Created</dt>
                 <dd className="mt-1 text-sm text-slate-900">
                   {new Date(document.created_at).toLocaleString()}

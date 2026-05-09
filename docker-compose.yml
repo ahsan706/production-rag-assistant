@@ -72,11 +72,13 @@ services:
       QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://ollama:11434}
       UPLOAD_DIR: ${UPLOAD_DIR:-/data/uploads}
+      EXTRACTION_DIR: ${EXTRACTION_DIR:-/data/extracted}
       MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-10485760}
     ports:
       - "8000:8000"
     volumes:
       - uploads_data:/data/uploads
+      - extracted_data:/data/extracted
     depends_on:
       postgres:
         condition: service_healthy
@@ -102,12 +104,18 @@ services:
 
   worker:
     build:
-      context: ./apps/worker
+      context: .
+      dockerfile: apps/worker/Dockerfile
     environment:
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://rag:rag@postgres:5432/rag_assistant}
       QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://ollama:11434}
+      UPLOAD_DIR: ${UPLOAD_DIR:-/data/uploads}
+      EXTRACTION_DIR: ${EXTRACTION_DIR:-/data/extracted}
+    volumes:
+      - uploads_data:/data/uploads
+      - extracted_data:/data/extracted
     depends_on:
       redis:
         condition: service_healthy
@@ -118,7 +126,7 @@ services:
       ollama:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "celery -A app.celery_app inspect ping -d celery@$$HOSTNAME --timeout=5 | grep -q pong"]
+      test: ["CMD-SHELL", "celery -A app.worker.celery_app inspect ping -d celery@$$HOSTNAME --timeout=5 | grep -q pong"]
       interval: 15s
       timeout: 10s
       retries: 20
@@ -156,3 +164,4 @@ volumes:
   qdrant_data:
   ollama_data:
   uploads_data:
+  extracted_data:

@@ -24,6 +24,7 @@ class Document(Base):
     checksum_sha256: Mapped[str] = mapped_column(String(64), unique=True, index=True)
     status: Mapped[str] = mapped_column(String(40), index=True, default="uploaded")
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    extracted_text_path: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     document_metadata: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(

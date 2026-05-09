@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     qdrant_url: str
     ollama_base_url: str
     upload_dir: str = "/data/uploads"
+    extraction_dir: str = "/data/extracted"
     max_upload_bytes: int = 10 * 1024 * 1024
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")

@@ -7,13 +7,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY apps/api/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN addgroup --system app && adduser --system --ingroup app app
+RUN mkdir -p /data/uploads /data/extracted && chown -R app:app /data
 
-COPY --chown=app:app app ./app
+COPY --chown=app:app apps/api/app ./app
 
 USER app
 
-CMD ["celery", "-A", "app.celery_app", "worker", "--loglevel=INFO"]
+CMD ["celery", "-A", "app.worker.celery_app", "worker", "--loglevel=INFO", "--concurrency=2"]

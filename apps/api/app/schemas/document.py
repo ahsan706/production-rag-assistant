@@ -17,6 +17,7 @@ class DocumentRead(BaseModel):
     checksum_sha256: str
     status: str
     error_message: str | None
+    extracted_text_path: str | None
     document_metadata: dict[str, Any]
     created_at: datetime
     updated_at: datetime
