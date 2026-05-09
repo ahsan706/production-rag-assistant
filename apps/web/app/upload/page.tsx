@@ -53,9 +53,14 @@ export default function UploadPage() {
             <p className="text-sm font-medium uppercase tracking-wide text-slate-500">Documents</p>
             <h1 className="mt-2 text-3xl font-semibold text-slate-950">Upload</h1>
           </div>
-          <LinkButton href="/documents" variant="secondary">
-            Document List
-          </LinkButton>
+          <div className="flex flex-wrap gap-2">
+            <LinkButton href="/documents" variant="secondary">
+              Document List
+            </LinkButton>
+            <LinkButton href="/chat" variant="secondary">
+              Chat
+            </LinkButton>
+          </div>
         </div>
 
         <form className="rounded-lg border border-slate-200 bg-white p-5" onSubmit={onSubmit}>

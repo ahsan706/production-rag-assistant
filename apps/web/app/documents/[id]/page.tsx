@@ -34,9 +34,14 @@ export default function DocumentDetailsPage() {
               {document?.original_filename ?? "Details"}
             </h1>
           </div>
-          <LinkButton href="/documents" variant="secondary">
-            Back
-          </LinkButton>
+          <div className="flex flex-wrap gap-2">
+            <LinkButton href="/chat" variant="secondary">
+              Chat
+            </LinkButton>
+            <LinkButton href="/documents" variant="secondary">
+              Back
+            </LinkButton>
+          </div>
         </div>
 
         {error ? <p className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}</p> : null}

@@ -34,7 +34,15 @@ export default function DocumentsPage() {
             <p className="text-sm font-medium uppercase tracking-wide text-slate-500">Documents</p>
             <h1 className="mt-2 text-3xl font-semibold text-slate-950">Library</h1>
           </div>
-          <LinkButton href="/upload">Upload</LinkButton>
+          <div className="flex flex-wrap gap-2">
+            <LinkButton href="/chat" variant="secondary">
+              Chat
+            </LinkButton>
+            <LinkButton href="/retrieval" variant="secondary">
+              Retrieval
+            </LinkButton>
+            <LinkButton href="/upload">Upload</LinkButton>
+          </div>
         </div>
 
         <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
