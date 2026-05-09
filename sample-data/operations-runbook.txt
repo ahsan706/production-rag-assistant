@@ -1,0 +1,9 @@
+Production RAG Operations Runbook
+
+If ingestion jobs are retrying, first check the worker logs, Redis queue health, and the current document error message.
+
+If embeddings fail, verify the AI_BASE_URL, AI_API_KEY, AI_EMBEDDING_MODEL, and AI_EMBEDDING_DIMENSIONS environment variables.
+
+If retrieval returns no useful context, inspect Qdrant collection status and run the retrieval debug page with the same user query.
+
+If the assistant refuses a supported answer, inspect retrieved chunk scores and adjust RETRIEVAL_MIN_SCORE only after checking the source documents.

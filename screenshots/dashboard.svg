@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-label="Production RAG Assistant dashboard screenshot">
+  <rect width="1200" height="760" fill="#f7f8fa"/>
+  <rect x="72" y="64" width="1056" height="128" fill="#f7f8fa" stroke="#cbd5e1"/>
+  <text x="96" y="102" font-family="Arial" font-size="14" fill="#64748b">PRODUCTION RAG WORKSPACE</text>
+  <text x="96" y="142" font-family="Arial" font-size="42" font-weight="700" fill="#0f172a">Production RAG Assistant</text>
+  <text x="96" y="174" font-family="Arial" font-size="18" fill="#475569">Upload documents, process them asynchronously, search embedded chunks, and ask grounded questions with citations.</text>
+  <rect x="96" y="220" width="124" height="42" rx="6" fill="#0f172a"/>
+  <text x="119" y="247" font-family="Arial" font-size="14" fill="#ffffff">Open Chat</text>
+  <rect x="232" y="220" width="140" height="42" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="255" y="247" font-family="Arial" font-size="14" fill="#0f172a">Upload Document</text>
+  <rect x="72" y="304" width="240" height="116" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="96" y="340" font-family="Arial" font-size="16" fill="#64748b">API</text>
+  <text x="96" y="374" font-family="Monaco, monospace" font-size="15" fill="#0f172a">localhost:8000</text>
+  <text x="96" y="400" font-family="Arial" font-size="13" fill="#64748b">Health, upload, retrieval, chat</text>
+  <rect x="336" y="304" width="240" height="116" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="360" y="340" font-family="Arial" font-size="16" fill="#64748b">Worker</text>
+  <text x="360" y="374" font-family="Monaco, monospace" font-size="15" fill="#0f172a">Celery + Redis</text>
+  <text x="360" y="400" font-family="Arial" font-size="13" fill="#64748b">Extraction, chunking, embedding</text>
+  <rect x="600" y="304" width="240" height="116" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="624" y="340" font-family="Arial" font-size="16" fill="#64748b">Qdrant</text>
+  <text x="624" y="374" font-family="Monaco, monospace" font-size="15" fill="#0f172a">qdrant:6333</text>
+  <text x="624" y="400" font-family="Arial" font-size="13" fill="#64748b">Vector search collection</text>
+  <rect x="864" y="304" width="240" height="116" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="888" y="340" font-family="Arial" font-size="16" fill="#64748b">Ollama</text>
+  <text x="888" y="374" font-family="Monaco, monospace" font-size="15" fill="#0f172a">ollama:11434</text>
+  <text x="888" y="400" font-family="Arial" font-size="13" fill="#64748b">Local embeddings and chat</text>
+</svg>

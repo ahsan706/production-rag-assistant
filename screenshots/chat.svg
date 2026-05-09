@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-label="RAG chat screenshot">
+  <rect width="1200" height="760" fill="#f7f8fa"/>
+  <text x="72" y="72" font-family="Arial" font-size="14" fill="#64748b">GROUNDED CHAT</text>
+  <text x="72" y="112" font-family="Arial" font-size="38" font-weight="700" fill="#0f172a">Ask Your Documents</text>
+  <rect x="72" y="152" width="760" height="520" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+  <rect x="96" y="190" width="360" height="76" rx="8" fill="#0f172a"/>
+  <text x="120" y="222" font-family="Arial" font-size="13" fill="#ffffff">USER</text>
+  <text x="120" y="248" font-family="Arial" font-size="16" fill="#ffffff">What should embeddings be written into?</text>
+  <rect x="96" y="292" width="688" height="210" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="120" y="326" font-family="Arial" font-size="13" fill="#64748b">ASSISTANT · SUCCEEDED</text>
+  <text x="120" y="360" font-family="Arial" font-size="16" fill="#0f172a">Embeddings should be written into Qdrant for semantic retrieval. [1]</text>
+  <rect x="120" y="392" width="620" height="72" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="144" y="424" font-family="Monaco, monospace" font-size="13" fill="#0f172a">[1]</text>
+  <text x="184" y="424" font-family="Arial" font-size="15" fill="#0f172a">vector-storage.md · chunk 0 · score 0.84</text>
+  <text x="144" y="450" font-family="Arial" font-size="13" fill="#64748b">Embeddings should be written into Qdrant for semantic retrieval.</text>
+  <rect x="864" y="152" width="264" height="220" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="888" y="190" font-family="Arial" font-size="16" font-weight="700" fill="#0f172a">Grounding Contract</text>
+  <text x="888" y="230" font-family="Arial" font-size="14" fill="#475569">Answers require retrieval.</text>
+  <text x="888" y="260" font-family="Arial" font-size="14" fill="#475569">Citations come from backend metadata.</text>
+  <text x="888" y="290" font-family="Arial" font-size="14" fill="#475569">Weak context is refused.</text>
+</svg>
