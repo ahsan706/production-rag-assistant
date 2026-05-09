@@ -10,10 +10,13 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from app.core.config import settings
 from app.db.session import SessionLocal
+from app.models.chunk import Chunk
 from app.models.document import Document
 from app.models.ingestion_job import IngestionJob
 from app.services.chunks import replace_document_chunks
+from app.services.embeddings import get_embedding_provider
 from app.services.extraction import EmptyDocumentError, extract_text
+from app.services.vector_store import get_vector_store
 
 celery_app = Celery("production_rag_worker", broker=settings.redis_url, backend=settings.redis_url)
 celery_app.conf.update(
@@ -79,11 +82,25 @@ def process_document(self, job_id: str) -> str:
         document.document_metadata = metadata
         flag_modified(document, "document_metadata")
         document.extracted_text_path = str(extracted_path)
-        document.status = "chunked"
+        db.flush()
+
+        provider = get_embedding_provider()
+        vector_store = get_vector_store()
+        vector_store.ensure_collection()
+        embeddings = provider.embed_texts([chunk.text for chunk in chunks])
+        vector_store.upsert_chunks(document, chunks, embeddings)
+        embedded_at = datetime.now(timezone.utc)
+        for chunk in chunks:
+            chunk.vector_point_id = chunk.id
+            chunk.embedding_model = settings.ai_embedding_model
+            chunk.embedded_at = embedded_at
+
+        document.status = "embedded"
         job.status = "succeeded"
         job.completed_at = datetime.now(timezone.utc)
         _log(job, f"Extraction completed with {len(text)} characters.")
         _log(job, f"Chunking completed with {len(chunks)} chunks.")
+        _log(job, f"Embedding completed for {len(chunks)} chunks.")
         db.commit()
         return str(document.id)
     except EmptyDocumentError as exc:

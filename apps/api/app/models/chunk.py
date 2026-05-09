@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import DateTime, ForeignKey, Integer, Text, UniqueConstraint, func
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -27,5 +27,8 @@ class Chunk(Base):
     char_start: Mapped[int] = mapped_column(Integer)
     char_end: Mapped[int] = mapped_column(Integer)
     page_number: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    vector_point_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True, unique=True)
+    embedding_model: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    embedded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     chunk_metadata: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

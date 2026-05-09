@@ -16,6 +16,7 @@ RUN mkdir -p /data/uploads && chown -R app:app /data
 COPY --chown=app:app alembic.ini .
 COPY --chown=app:app alembic ./alembic
 COPY --chown=app:app app ./app
+COPY --chown=app:app tests ./tests
 
 USER app
 
