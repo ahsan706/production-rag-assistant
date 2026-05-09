@@ -23,7 +23,7 @@ class OpenAICompatibleChatProvider:
             f"{self.base_url}/chat/completions",
             headers={"Authorization": f"Bearer {self.api_key}"},
             json={"model": self.model, "messages": messages, "temperature": temperature},
-            timeout=120.0,
+            timeout=settings.ai_request_timeout_seconds,
         )
         response.raise_for_status()
         payload = response.json()

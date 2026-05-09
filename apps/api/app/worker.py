@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import logging
 from pathlib import Path
 from uuid import UUID
 
@@ -9,6 +10,7 @@ from celery.exceptions import MaxRetriesExceededError
 from sqlalchemy.orm.attributes import flag_modified
 
 from app.core.config import settings
+from app.core.logging import configure_logging
 from app.db.session import SessionLocal
 from app.models.chunk import Chunk
 from app.models.document import Document
@@ -17,6 +19,9 @@ from app.services.chunks import replace_document_chunks
 from app.services.embeddings import get_embedding_provider
 from app.services.extraction import EmptyDocumentError, extract_text
 from app.services.vector_store import get_vector_store
+
+configure_logging()
+logger = logging.getLogger(__name__)
 
 celery_app = Celery("production_rag_worker", broker=settings.redis_url, backend=settings.redis_url)
 celery_app.conf.update(
@@ -60,6 +65,10 @@ def process_document(self, job_id: str) -> str:
         document.error_message = None
         _log(job, f"Starting extraction attempt {job.attempts}.")
         db.commit()
+        logger.info(
+            "ingestion_started",
+            extra={"job_id": str(job.id), "document_id": str(document.id), "attempt": job.attempts},
+        )
 
         text = extract_text(document.storage_path, document.file_extension)
         extraction_dir = Path(settings.extraction_dir)
@@ -102,6 +111,15 @@ def process_document(self, job_id: str) -> str:
         _log(job, f"Chunking completed with {len(chunks)} chunks.")
         _log(job, f"Embedding completed for {len(chunks)} chunks.")
         db.commit()
+        logger.info(
+            "ingestion_succeeded",
+            extra={
+                "job_id": str(job.id),
+                "document_id": str(document.id),
+                "chunk_count": len(chunks),
+                "embedding_model": settings.ai_embedding_model,
+            },
+        )
         return str(document.id)
     except EmptyDocumentError as exc:
         if "job" in locals():
@@ -113,12 +131,23 @@ def process_document(self, job_id: str) -> str:
             document.status = "failed"
             document.error_message = str(exc)
         db.commit()
+        logger.warning("ingestion_failed_empty_document", extra={"job_id": job_id, "error": str(exc)})
         return job_id
     except Exception as exc:
         if "job" in locals():
             job.attempts = self.request.retries + 1
             job.error_message = str(exc)
             _log(job, f"Extraction failed: {exc}")
+            logger.warning(
+                "ingestion_attempt_failed",
+                extra={
+                    "job_id": job_id,
+                    "attempt": self.request.retries + 1,
+                    "max_retries": self.max_retries,
+                    "error_type": exc.__class__.__name__,
+                    "error": str(exc),
+                },
+            )
             if self.request.retries < self.max_retries:
                 job.status = "retrying"
                 if "document" in locals():

@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     ai_embedding_dimensions: int = 768
     qdrant_collection: str = "rag_chunks"
     retrieval_min_score: float = 0.6
+    ai_request_timeout_seconds: float = 120.0
+    qdrant_request_timeout_seconds: float = 20.0
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

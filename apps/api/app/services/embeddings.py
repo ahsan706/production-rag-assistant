@@ -26,7 +26,7 @@ class OpenAICompatibleEmbeddingProvider:
             f"{self.base_url}/embeddings",
             headers={"Authorization": f"Bearer {self.api_key}"},
             json={"model": self.model, "input": texts},
-            timeout=60.0,
+            timeout=settings.ai_request_timeout_seconds,
         )
         response.raise_for_status()
         payload = response.json()

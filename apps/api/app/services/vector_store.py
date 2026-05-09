@@ -16,7 +16,10 @@ class QdrantVectorStore:
         self.vector_size = vector_size
 
     def ensure_collection(self) -> None:
-        response = httpx.get(f"{self.url}/collections/{self.collection}", timeout=10.0)
+        response = httpx.get(
+            f"{self.url}/collections/{self.collection}",
+            timeout=settings.qdrant_request_timeout_seconds,
+        )
         if response.status_code == 200:
             return
         if response.status_code != 404:
@@ -25,7 +28,7 @@ class QdrantVectorStore:
         create_response = httpx.put(
             f"{self.url}/collections/{self.collection}",
             json={"vectors": {"size": self.vector_size, "distance": "Cosine"}},
-            timeout=20.0,
+            timeout=settings.qdrant_request_timeout_seconds,
         )
         create_response.raise_for_status()
 
@@ -58,7 +61,7 @@ class QdrantVectorStore:
         response = httpx.put(
             f"{self.url}/collections/{self.collection}/points?wait=true",
             json={"points": points},
-            timeout=60.0,
+            timeout=settings.qdrant_request_timeout_seconds,
         )
         response.raise_for_status()
 
@@ -66,7 +69,7 @@ class QdrantVectorStore:
         response = httpx.post(
             f"{self.url}/collections/{self.collection}/points/search",
             json={"vector": vector, "limit": limit, "with_payload": True},
-            timeout=20.0,
+            timeout=settings.qdrant_request_timeout_seconds,
         )
         response.raise_for_status()
         return response.json()["result"]
