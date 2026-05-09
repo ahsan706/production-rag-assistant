@@ -15,9 +15,11 @@ class Settings(BaseSettings):
     max_upload_bytes: int = 10 * 1024 * 1024
     ai_base_url: str = "http://ollama:11434/v1"
     ai_api_key: str = "ollama"
+    ai_chat_model: str = "qwen2.5:0.5b"
     ai_embedding_model: str = "nomic-embed-text"
     ai_embedding_dimensions: int = 768
     qdrant_collection: str = "rag_chunks"
+    retrieval_min_score: float = 0.6
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
