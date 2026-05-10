@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     ai_embedding_model: str = "nomic-embed-text"
     ai_embedding_dimensions: int = 768
     qdrant_collection: str = "rag_chunks"
-    retrieval_min_score: float = 0.6
+    retrieval_min_score: float = 0.45
     ai_request_timeout_seconds: float = 120.0
     qdrant_request_timeout_seconds: float = 20.0
 
