@@ -1,0 +1,65 @@
+name: Docker build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/api/Dockerfile"
+      - "apps/api/requirements.txt"
+      - "apps/worker/Dockerfile"
+      - "apps/worker/requirements.txt"
+      - "apps/web/Dockerfile"
+      - "apps/web/package*.json"
+      - "docker-compose.yml"
+      - ".github/workflows/docker.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/api/Dockerfile"
+      - "apps/api/requirements.txt"
+      - "apps/worker/Dockerfile"
+      - "apps/worker/requirements.txt"
+      - "apps/web/Dockerfile"
+      - "apps/web/package*.json"
+      - "docker-compose.yml"
+      - ".github/workflows/docker.yml"
+
+jobs:
+  build:
+    name: Build ${{ matrix.image.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - name: api
+            context: apps/api
+            dockerfile: apps/api/Dockerfile
+          - name: worker
+            context: .
+            dockerfile: apps/worker/Dockerfile
+          - name: web
+            context: apps/web
+            dockerfile: apps/web/Dockerfile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build (no push)
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.image.context }}
+          file: ${{ matrix.image.dockerfile }}
+          push: false
+          load: false
+          cache-from: type=gha,scope=${{ matrix.image.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image.name }}
+
+  compose:
+    name: docker compose config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate docker-compose.yml
+        run: docker compose config -q
