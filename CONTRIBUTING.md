@@ -14,6 +14,18 @@ sample-data   Demo documents you can upload
 
 The worker currently imports from `apps/api/app/` directly. See `docs/architecture-review.md` for why this is flagged and how it would be split.
 
+## Local Python venv (for IDE / Pylance)
+
+Python dependencies are managed with [uv](https://docs.astral.sh/uv/). Install uv, then from `apps/api/`:
+
+```bash
+uv sync
+```
+
+uv reads `.python-version` and `requires-python` in `pyproject.toml`, refuses to run on the wrong interpreter, and creates `apps/api/.venv` with the locked deps. Then in VS Code: `Cmd+Shift+P` → "Python: Select Interpreter" → `apps/api/.venv`.
+
+To add a dep: `uv add <pkg>` (or `uv add --group dev <pkg>` for dev-only). Commit the updated `pyproject.toml` and `uv.lock`.
+
 ## Development loop
 
 ```bash
@@ -36,7 +48,8 @@ API tests are hermetic — they monkeypatch `httpx`, so no live Postgres / Qdran
 
 ## Style
 
-- **Python**: `ruff check` and `ruff format` (configured in `pyproject.toml`). Line length 100. `from __future__ import annotations` is the convention used in the repo.
+- **Python**: 3.12.x, pinned via `.python-version` and `requires-python` in `apps/api/pyproject.toml`. Deps managed by uv (`uv.lock` is the source of truth). `ruff check` / `ruff format` configured in the same `pyproject.toml`; line length 100; `from __future__ import annotations` is the repo convention.
+- **Node**: 22.x (`.nvmrc`). `engines` in `apps/web/package.json` plus `engine-strict=true` in `apps/web/.npmrc` make `npm install` hard-fail on the wrong runtime.
 - **TypeScript**: `tsc --noEmit` for type errors; `next build` is the build gate.
 - **Commits**: short imperative subject. The repo's history uses phase-style scopes (`feat(ingestion):`, `docs:`, `chore:`).
 - **Pre-commit** is optional but recommended:

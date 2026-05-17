@@ -1,0 +1,42 @@
+[project]
+name = "rag-api"
+version = "0.1.0"
+description = "FastAPI service and Celery worker for the production-rag-assistant project."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.34.0",
+    "pydantic-settings==2.7.1",
+    "SQLAlchemy==2.0.36",
+    "alembic==1.14.0",
+    "celery[redis]==5.4.0",
+    "psycopg[binary]==3.2.13",
+    "redis==5.2.1",
+    "httpx==0.28.1",
+    "pypdf==5.1.0",
+    "python-multipart==0.0.20",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==8.3.4",
+    "ruff==0.8.4",
+    "mypy==1.13.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

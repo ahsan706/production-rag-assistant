@@ -4,17 +4,17 @@ The system is a Dockerized RAG application with separate web, API, worker, datab
 
 ```mermaid
 flowchart LR
-  User["User"] --> Web["Next.js Web"]
-  Web --> API["FastAPI API"]
-  API --> Postgres["PostgreSQL"]
-  API --> Redis["Redis Queue"]
-  API --> Qdrant["Qdrant Vector DB"]
-  API --> Ollama["Ollama OpenAI-Compatible API"]
-  Redis --> Worker["Celery Worker"]
-  Worker --> Postgres
-  Worker --> Qdrant
-  Worker --> Ollama
-  Worker --> Files["Uploaded and Extracted Files"]
+  User["User"] -- "browser" --> Web["Next.js Web"]
+  Web -- "HTTP REST (upload, chat, retrieval)" --> API["FastAPI API"]
+  API -- "documents, chunks, sessions, messages" --> Postgres["PostgreSQL"]
+  API -- "enqueue ingestion job" --> Redis["Redis Queue"]
+  API -- "vector search" --> Qdrant["Qdrant Vector DB"]
+  API -- "embeddings + chat completions" --> Ollama["Ollama OpenAI-Compatible API"]
+  Redis -- "consume task" --> Worker["Celery Worker"]
+  Worker -- "update job, write chunks" --> Postgres
+  Worker -- "upsert chunk vectors" --> Qdrant
+  Worker -- "embed chunks" --> Ollama
+  Worker -- "read upload, write extracted text" --> Files["Uploaded and Extracted Files"]
 ```
 
 ## Services

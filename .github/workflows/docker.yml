@@ -5,9 +5,9 @@ on:
     branches: [main]
     paths:
       - "apps/api/Dockerfile"
-      - "apps/api/requirements.txt"
+      - "apps/api/pyproject.toml"
+      - "apps/api/uv.lock"
       - "apps/worker/Dockerfile"
-      - "apps/worker/requirements.txt"
       - "apps/web/Dockerfile"
       - "apps/web/package*.json"
       - "docker-compose.yml"
@@ -16,9 +16,9 @@ on:
     branches: [main]
     paths:
       - "apps/api/Dockerfile"
-      - "apps/api/requirements.txt"
+      - "apps/api/pyproject.toml"
+      - "apps/api/uv.lock"
       - "apps/worker/Dockerfile"
-      - "apps/worker/requirements.txt"
       - "apps/web/Dockerfile"
       - "apps/web/package*.json"
       - "docker-compose.yml"
