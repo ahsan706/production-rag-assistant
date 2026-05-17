@@ -8,7 +8,13 @@ from sqlalchemy.orm import selectinload
 
 from app.db.session import DbSession
 from app.models.chat import ChatSession
-from app.schemas.chat import ChatMessageCreate, ChatMessageRead, ChatSessionCreate, ChatSessionRead, ChatTurnResponse
+from app.schemas.chat import (
+    ChatMessageCreate,
+    ChatMessageRead,
+    ChatSessionCreate,
+    ChatSessionRead,
+    ChatTurnResponse,
+)
 from app.services.rag import answer_question
 
 router = APIRouter(prefix="/chat/sessions", tags=["chat"])
