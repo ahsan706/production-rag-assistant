@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy.orm import Session
 
@@ -15,7 +15,7 @@ def create_ingestion_job(db: Session, document: Document) -> IngestionJob:
         status="queued",
         attempts=0,
         max_attempts=3,
-        logs=[{"at": datetime.now(timezone.utc).isoformat(), "message": "Ingestion job queued."}],
+        logs=[{"at": datetime.now(UTC).isoformat(), "message": "Ingestion job queued."}],
     )
     document.status = "queued"
     document.error_message = None

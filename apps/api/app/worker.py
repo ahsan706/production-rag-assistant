@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
 import logging
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import UUID
 
@@ -12,7 +12,6 @@ from sqlalchemy.orm.attributes import flag_modified
 from app.core.config import settings
 from app.core.logging import configure_logging
 from app.db.session import SessionLocal
-from app.models.chunk import Chunk
 from app.models.document import Document
 from app.models.ingestion_job import IngestionJob
 from app.services.chunks import replace_document_chunks
@@ -34,7 +33,7 @@ celery_app.conf.update(
 
 def _log(job: IngestionJob, message: str) -> None:
     logs = list(job.logs or [])
-    logs.append({"at": datetime.now(timezone.utc).isoformat(), "message": message})
+    logs.append({"at": datetime.now(UTC).isoformat(), "message": message})
     job.logs = logs
     flag_modified(job, "logs")
 
@@ -56,7 +55,7 @@ def process_document(self, job_id: str) -> str:
         if document is None:
             raise ValueError(f"Document not found for ingestion job: {job_id}")
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         job.status = "running"
         job.started_at = job.started_at or now
         job.attempts = self.request.retries + 1
@@ -98,7 +97,7 @@ def process_document(self, job_id: str) -> str:
         vector_store.ensure_collection()
         embeddings = provider.embed_texts([chunk.text for chunk in chunks])
         vector_store.upsert_chunks(document, chunks, embeddings)
-        embedded_at = datetime.now(timezone.utc)
+        embedded_at = datetime.now(UTC)
         for chunk in chunks:
             chunk.vector_point_id = chunk.id
             chunk.embedding_model = settings.ai_embedding_model
@@ -106,7 +105,7 @@ def process_document(self, job_id: str) -> str:
 
         document.status = "embedded"
         job.status = "succeeded"
-        job.completed_at = datetime.now(timezone.utc)
+        job.completed_at = datetime.now(UTC)
         _log(job, f"Extraction completed with {len(text)} characters.")
         _log(job, f"Chunking completed with {len(chunks)} chunks.")
         _log(job, f"Embedding completed for {len(chunks)} chunks.")
@@ -125,13 +124,15 @@ def process_document(self, job_id: str) -> str:
         if "job" in locals():
             job.status = "failed"
             job.error_message = str(exc)
-            job.completed_at = datetime.now(timezone.utc)
+            job.completed_at = datetime.now(UTC)
             _log(job, str(exc))
         if "document" in locals():
             document.status = "failed"
             document.error_message = str(exc)
         db.commit()
-        logger.warning("ingestion_failed_empty_document", extra={"job_id": job_id, "error": str(exc)})
+        logger.warning(
+            "ingestion_failed_empty_document", extra={"job_id": job_id, "error": str(exc)}
+        )
         return job_id
     except Exception as exc:
         if "job" in locals():
@@ -154,10 +155,10 @@ def process_document(self, job_id: str) -> str:
                     document.status = "processing"
                     document.error_message = str(exc)
                 db.commit()
-                raise self.retry(exc=exc, countdown=1)
+                raise self.retry(exc=exc, countdown=1) from exc
 
             job.status = "failed"
-            job.completed_at = datetime.now(timezone.utc)
+            job.completed_at = datetime.now(UTC)
         if "document" in locals():
             document.status = "failed"
             document.error_message = str(exc)

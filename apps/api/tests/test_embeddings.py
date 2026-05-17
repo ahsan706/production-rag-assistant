@@ -4,7 +4,9 @@ import pytest
 from app.services.embeddings import OpenAICompatibleEmbeddingProvider
 
 
-def test_openai_compatible_embedding_provider_preserves_input_order(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_openai_compatible_embedding_provider_preserves_input_order(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     def fake_post(*args, **kwargs):
         return httpx.Response(
             200,

@@ -38,7 +38,10 @@ def test_extract_chunk_id_prefers_payload_chunk_id() -> None:
     chunk_id = uuid.uuid4()
     result_id = uuid.uuid4()
 
-    assert _extract_chunk_id({"id": str(result_id), "payload": {"chunk_id": str(chunk_id)}}) == chunk_id
+    assert (
+        _extract_chunk_id({"id": str(result_id), "payload": {"chunk_id": str(chunk_id)}})
+        == chunk_id
+    )
 
 
 def test_extract_chunk_id_falls_back_to_result_id() -> None:

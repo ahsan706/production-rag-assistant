@@ -5,16 +5,17 @@ Revises: 0002_create_ingestion_jobs
 Create Date: 2026-05-09
 """
 
-from typing import Sequence, Union
+from collections.abc import Sequence
 
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
+from alembic import op
+
 revision: str = "0003_create_chunks"
-down_revision: Union[str, None] = "0002_create_ingestion_jobs"
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = "0002_create_ingestion_jobs"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
@@ -29,7 +30,9 @@ def upgrade() -> None:
         sa.Column("char_end", sa.Integer(), nullable=False),
         sa.Column("page_number", sa.Integer(), nullable=True),
         sa.Column("chunk_metadata", postgresql.JSONB(astext_type=sa.Text()), nullable=False),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
         sa.ForeignKeyConstraint(["document_id"], ["documents.id"], ondelete="CASCADE"),
         sa.UniqueConstraint("document_id", "chunk_index", name="uq_chunks_document_index"),
     )

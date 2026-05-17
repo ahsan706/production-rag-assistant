@@ -26,7 +26,7 @@ class ChatSession(Base):
         onupdate=func.now(),
     )
 
-    messages: Mapped[list["ChatMessage"]] = relationship(
+    messages: Mapped[list[ChatMessage]] = relationship(
         back_populates="session",
         cascade="all, delete-orphan",
         order_by="ChatMessage.created_at",
