@@ -24,7 +24,9 @@ def upload_document(
     if not duplicate:
         create_ingestion_job(db, document)
         db.refresh(document)
-    return DocumentUploadResponse(document=DocumentRead.model_validate(document), duplicate=duplicate)
+    return DocumentUploadResponse(
+        document=DocumentRead.model_validate(document), duplicate=duplicate
+    )
 
 
 @router.get("", response_model=list[DocumentRead])

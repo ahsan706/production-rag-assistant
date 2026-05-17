@@ -18,7 +18,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.add_column("chunks", sa.Column("vector_point_id", postgresql.UUID(as_uuid=True), nullable=True))
+    op.add_column(
+        "chunks", sa.Column("vector_point_id", postgresql.UUID(as_uuid=True), nullable=True)
+    )
     op.add_column("chunks", sa.Column("embedding_model", sa.String(length=120), nullable=True))
     op.add_column("chunks", sa.Column("embedded_at", sa.DateTime(timezone=True), nullable=True))
     op.create_index("ix_chunks_vector_point_id", "chunks", ["vector_point_id"], unique=True)

@@ -29,7 +29,9 @@ def upgrade() -> None:
         sa.Column("char_end", sa.Integer(), nullable=False),
         sa.Column("page_number", sa.Integer(), nullable=True),
         sa.Column("chunk_metadata", postgresql.JSONB(astext_type=sa.Text()), nullable=False),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
         sa.ForeignKeyConstraint(["document_id"], ["documents.id"], ondelete="CASCADE"),
         sa.UniqueConstraint("document_id", "chunk_index", name="uq_chunks_document_index"),
     )

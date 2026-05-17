@@ -18,7 +18,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.add_column("documents", sa.Column("extracted_text_path", sa.String(length=1024), nullable=True))
+    op.add_column(
+        "documents", sa.Column("extracted_text_path", sa.String(length=1024), nullable=True)
+    )
     op.create_table(
         "ingestion_jobs",
         sa.Column("id", postgresql.UUID(as_uuid=True), primary_key=True),
@@ -28,8 +30,12 @@ def upgrade() -> None:
         sa.Column("max_attempts", sa.Integer(), nullable=False),
         sa.Column("logs", postgresql.JSONB(astext_type=sa.Text()), nullable=False),
         sa.Column("error_message", sa.Text(), nullable=True),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
-        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
+        sa.Column(
+            "updated_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
         sa.Column("started_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("completed_at", sa.DateTime(timezone=True), nullable=True),
         sa.ForeignKeyConstraint(["document_id"], ["documents.id"], ondelete="CASCADE"),

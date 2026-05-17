@@ -12,7 +12,6 @@ from sqlalchemy.orm.attributes import flag_modified
 from app.core.config import settings
 from app.core.logging import configure_logging
 from app.db.session import SessionLocal
-from app.models.chunk import Chunk
 from app.models.document import Document
 from app.models.ingestion_job import IngestionJob
 from app.services.chunks import replace_document_chunks
@@ -131,7 +130,9 @@ def process_document(self, job_id: str) -> str:
             document.status = "failed"
             document.error_message = str(exc)
         db.commit()
-        logger.warning("ingestion_failed_empty_document", extra={"job_id": job_id, "error": str(exc)})
+        logger.warning(
+            "ingestion_failed_empty_document", extra={"job_id": job_id, "error": str(exc)}
+        )
         return job_id
     except Exception as exc:
         if "job" in locals():

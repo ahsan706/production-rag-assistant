@@ -29,7 +29,9 @@ def create_chat_session(
 @router.get("/{session_id}", response_model=ChatSessionRead)
 def get_chat_session(session_id: uuid.UUID, db: Session = Depends(get_db)) -> ChatSession:
     session = db.scalar(
-        select(ChatSession).options(selectinload(ChatSession.messages)).where(ChatSession.id == session_id)
+        select(ChatSession)
+        .options(selectinload(ChatSession.messages))
+        .where(ChatSession.id == session_id)
     )
     if session is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found.")
@@ -46,5 +48,7 @@ def create_chat_message(
     if session is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found.")
 
-    user_message, assistant_message = answer_question(db, session, request.content, top_k=request.top_k)
+    user_message, assistant_message = answer_question(
+        db, session, request.content, top_k=request.top_k
+    )
     return ChatTurnResponse(user_message=user_message, assistant_message=assistant_message)

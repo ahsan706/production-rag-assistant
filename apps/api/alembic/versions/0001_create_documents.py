@@ -31,8 +31,12 @@ def upgrade() -> None:
         sa.Column("status", sa.String(length=40), nullable=False),
         sa.Column("error_message", sa.Text(), nullable=True),
         sa.Column("document_metadata", postgresql.JSONB(astext_type=sa.Text()), nullable=False),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
-        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
+        sa.Column(
+            "updated_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
     )
     op.create_index("ix_documents_checksum_sha256", "documents", ["checksum_sha256"], unique=True)
     op.create_index("ix_documents_status", "documents", ["status"])

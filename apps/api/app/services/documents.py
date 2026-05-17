@@ -79,7 +79,9 @@ def save_document_upload(db: Session, file: UploadFile) -> tuple[Document, bool]
                 output.write(chunk)
 
         if size == 0:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uploaded file is empty.")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Uploaded file is empty."
+            )
 
         checksum_hex = checksum.hexdigest()
         existing = db.scalar(select(Document).where(Document.checksum_sha256 == checksum_hex))
@@ -114,7 +116,9 @@ def save_document_upload(db: Session, file: UploadFile) -> tuple[Document, bool]
     except IntegrityError:
         db.rollback()
         temp_path.unlink(missing_ok=True)
-        existing = db.scalar(select(Document).where(Document.checksum_sha256 == checksum.hexdigest()))
+        existing = db.scalar(
+            select(Document).where(Document.checksum_sha256 == checksum.hexdigest())
+        )
         if existing:
             return existing, True
         raise

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.models.chunk import Chunk
 from app.models.document import Document
-from app.services.chunking import TextChunk, chunk_text
+from app.services.chunking import chunk_text
 
 
 def replace_document_chunks(db: Session, document: Document, text: str) -> list[Chunk]:

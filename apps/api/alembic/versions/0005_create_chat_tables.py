@@ -24,9 +24,18 @@ def upgrade() -> None:
         sa.Column("title", sa.String(length=255), nullable=True),
         sa.Column("status", sa.String(length=40), nullable=False, server_default="active"),
         sa.Column("error_message", sa.Text(), nullable=True),
-        sa.Column("session_metadata", postgresql.JSONB(astext_type=sa.Text()), nullable=False, server_default="{}"),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
-        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            "session_metadata",
+            postgresql.JSONB(astext_type=sa.Text()),
+            nullable=False,
+            server_default="{}",
+        ),
+        sa.Column(
+            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
+        sa.Column(
+            "updated_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
     )
     op.create_index("ix_chat_sessions_status", "chat_sessions", ["status"])
 
@@ -38,10 +47,27 @@ def upgrade() -> None:
         sa.Column("content", sa.Text(), nullable=False),
         sa.Column("status", sa.String(length=40), nullable=False, server_default="succeeded"),
         sa.Column("error_message", sa.Text(), nullable=True),
-        sa.Column("citations", postgresql.JSONB(astext_type=sa.Text()), nullable=False, server_default="[]"),
-        sa.Column("retrieved_context", postgresql.JSONB(astext_type=sa.Text()), nullable=False, server_default="[]"),
-        sa.Column("message_metadata", postgresql.JSONB(astext_type=sa.Text()), nullable=False, server_default="{}"),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            "citations",
+            postgresql.JSONB(astext_type=sa.Text()),
+            nullable=False,
+            server_default="[]",
+        ),
+        sa.Column(
+            "retrieved_context",
+            postgresql.JSONB(astext_type=sa.Text()),
+            nullable=False,
+            server_default="[]",
+        ),
+        sa.Column(
+            "message_metadata",
+            postgresql.JSONB(astext_type=sa.Text()),
+            nullable=False,
+            server_default="{}",
+        ),
+        sa.Column(
+            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
         sa.ForeignKeyConstraint(["session_id"], ["chat_sessions.id"], ondelete="CASCADE"),
     )
     op.create_index("ix_chat_messages_session_id", "chat_messages", ["session_id"])
