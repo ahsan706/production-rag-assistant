@@ -44,7 +44,9 @@ def answer_question(
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {
                     "role": "user",
-                    "content": f"Context:\n{context}\n\nQuestion: {question}\n\nAnswer with citations.",
+                    "content": (
+                        f"Context:\n{context}\n\nQuestion: {question}\n\nAnswer with citations."
+                    ),
                 },
             ],
             temperature=0.0,

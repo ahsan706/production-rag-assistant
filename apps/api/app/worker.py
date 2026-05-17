@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
 import logging
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import UUID
 
@@ -33,7 +33,7 @@ celery_app.conf.update(
 
 def _log(job: IngestionJob, message: str) -> None:
     logs = list(job.logs or [])
-    logs.append({"at": datetime.now(timezone.utc).isoformat(), "message": message})
+    logs.append({"at": datetime.now(UTC).isoformat(), "message": message})
     job.logs = logs
     flag_modified(job, "logs")
 
@@ -55,7 +55,7 @@ def process_document(self, job_id: str) -> str:
         if document is None:
             raise ValueError(f"Document not found for ingestion job: {job_id}")
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         job.status = "running"
         job.started_at = job.started_at or now
         job.attempts = self.request.retries + 1
@@ -97,7 +97,7 @@ def process_document(self, job_id: str) -> str:
         vector_store.ensure_collection()
         embeddings = provider.embed_texts([chunk.text for chunk in chunks])
         vector_store.upsert_chunks(document, chunks, embeddings)
-        embedded_at = datetime.now(timezone.utc)
+        embedded_at = datetime.now(UTC)
         for chunk in chunks:
             chunk.vector_point_id = chunk.id
             chunk.embedding_model = settings.ai_embedding_model
@@ -105,7 +105,7 @@ def process_document(self, job_id: str) -> str:
 
         document.status = "embedded"
         job.status = "succeeded"
-        job.completed_at = datetime.now(timezone.utc)
+        job.completed_at = datetime.now(UTC)
         _log(job, f"Extraction completed with {len(text)} characters.")
         _log(job, f"Chunking completed with {len(chunks)} chunks.")
         _log(job, f"Embedding completed for {len(chunks)} chunks.")
@@ -124,7 +124,7 @@ def process_document(self, job_id: str) -> str:
         if "job" in locals():
             job.status = "failed"
             job.error_message = str(exc)
-            job.completed_at = datetime.now(timezone.utc)
+            job.completed_at = datetime.now(UTC)
             _log(job, str(exc))
         if "document" in locals():
             document.status = "failed"
@@ -155,10 +155,10 @@ def process_document(self, job_id: str) -> str:
                     document.status = "processing"
                     document.error_message = str(exc)
                 db.commit()
-                raise self.retry(exc=exc, countdown=1)
+                raise self.retry(exc=exc, countdown=1) from exc
 
             job.status = "failed"
-            job.completed_at = datetime.now(timezone.utc)
+            job.completed_at = datetime.now(UTC)
         if "document" in locals():
             document.status = "failed"
             document.error_message = str(exc)

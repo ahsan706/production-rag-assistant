@@ -42,7 +42,7 @@ class QdrantVectorStore:
             raise ValueError("Chunk and embedding counts do not match.")
 
         points: list[dict[str, Any]] = []
-        for chunk, embedding in zip(chunks, embeddings):
+        for chunk, embedding in zip(chunks, embeddings, strict=False):
             points.append(
                 {
                     "id": str(chunk.id),
