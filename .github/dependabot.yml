@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: pip
+  - package-ecosystem: uv
     directory: /apps/api
     schedule:
       interval: weekly
@@ -9,12 +9,10 @@ updates:
       python-runtime:
         patterns:
           - "*"
-
-  - package-ecosystem: pip
-    directory: /apps/worker
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 5
+        exclude-patterns:
+          - "celery*"
+          - "kombu*"
+          - "redis"
 
   - package-ecosystem: npm
     directory: /apps/web
@@ -42,6 +40,11 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 3
+    ignore:
+      # Python is pinned to 3.12 by .python-version + pyproject requires-python.
+      # Block major/minor bumps so Dependabot doesn't fight the pin.
+      - dependency-name: "python"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
 
   - package-ecosystem: github-actions
     directory: /
