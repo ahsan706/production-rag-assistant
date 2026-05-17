@@ -4,24 +4,24 @@ version = "0.1.0"
 description = "FastAPI service and Celery worker for the production-rag-assistant project."
 requires-python = ">=3.12,<3.13"
 dependencies = [
-    "fastapi==0.115.6",
-    "uvicorn[standard]==0.34.0",
-    "pydantic-settings==2.7.1",
+    "fastapi==0.136.1",
+    "uvicorn[standard]==0.47.0",
+    "pydantic-settings==2.14.1",
     "SQLAlchemy==2.0.36",
-    "alembic==1.14.0",
+    "alembic==1.18.4",
     "celery[redis]==5.4.0",
-    "psycopg[binary]==3.2.13",
+    "psycopg[binary]==3.3.4",
     "redis==5.2.1",
     "httpx==0.28.1",
-    "pypdf==5.1.0",
-    "python-multipart==0.0.20",
+    "pypdf==6.11.0",
+    "python-multipart==0.0.29",
 ]
 
 [dependency-groups]
 dev = [
-    "pytest==8.3.4",
-    "ruff==0.8.4",
-    "mypy==1.13.0",
+    "pytest==9.0.3",
+    "ruff==0.15.13",
+    "mypy==2.1.0",
 ]
 
 [tool.uv]
