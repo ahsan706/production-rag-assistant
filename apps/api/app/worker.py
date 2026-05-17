@@ -46,6 +46,8 @@ def ping() -> str:
 @celery_app.task(bind=True, name="ingestion.process_document", max_retries=2)
 def process_document(self, job_id: str) -> str:
     db = SessionLocal()
+    job: IngestionJob | None = None
+    document: Document | None = None
     try:
         job = db.get(IngestionJob, UUID(job_id))
         if job is None:
@@ -121,12 +123,12 @@ def process_document(self, job_id: str) -> str:
         )
         return str(document.id)
     except EmptyDocumentError as exc:
-        if "job" in locals():
+        if job is not None:
             job.status = "failed"
             job.error_message = str(exc)
             job.completed_at = datetime.now(UTC)
             _log(job, str(exc))
-        if "document" in locals():
+        if document is not None:
             document.status = "failed"
             document.error_message = str(exc)
         db.commit()
@@ -135,7 +137,7 @@ def process_document(self, job_id: str) -> str:
         )
         return job_id
     except Exception as exc:
-        if "job" in locals():
+        if job is not None:
             job.attempts = self.request.retries + 1
             job.error_message = str(exc)
             _log(job, f"Extraction failed: {exc}")
@@ -151,7 +153,7 @@ def process_document(self, job_id: str) -> str:
             )
             if self.request.retries < self.max_retries:
                 job.status = "retrying"
-                if "document" in locals():
+                if document is not None:
                     document.status = "processing"
                     document.error_message = str(exc)
                 db.commit()
@@ -159,7 +161,7 @@ def process_document(self, job_id: str) -> str:
 
             job.status = "failed"
             job.completed_at = datetime.now(UTC)
-        if "document" in locals():
+        if document is not None:
             document.status = "failed"
             document.error_message = str(exc)
         db.commit()

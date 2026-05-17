@@ -8,7 +8,7 @@ from sqlalchemy.orm import selectinload
 
 from app.db.session import DbSession
 from app.models.chat import ChatSession
-from app.schemas.chat import ChatMessageCreate, ChatSessionCreate, ChatSessionRead, ChatTurnResponse
+from app.schemas.chat import ChatMessageCreate, ChatMessageRead, ChatSessionCreate, ChatSessionRead, ChatTurnResponse
 from app.services.rag import answer_question
 
 router = APIRouter(prefix="/chat/sessions", tags=["chat"])
@@ -48,4 +48,7 @@ def create_chat_message(
     user_message, assistant_message = answer_question(
         db, session, request.content, top_k=request.top_k
     )
-    return ChatTurnResponse(user_message=user_message, assistant_message=assistant_message)
+    return ChatTurnResponse(
+        user_message=ChatMessageRead.model_validate(user_message),
+        assistant_message=ChatMessageRead.model_validate(assistant_message),
+    )
