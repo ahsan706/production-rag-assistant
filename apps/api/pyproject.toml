@@ -6,15 +6,15 @@ requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi==0.136.1",
     "uvicorn[standard]==0.47.0",
-    "pydantic-settings==2.14.1",
+    "pydantic-settings==2.14.2",
     "SQLAlchemy==2.0.36",
     "alembic==1.18.4",
     "celery[redis]==5.6.3",
     "psycopg[binary]==3.3.4",
     "redis==5.2.1",
     "httpx==0.28.1",
-    "pypdf==6.12.0",
-    "python-multipart==0.0.29",
+    "pypdf==6.14.2",
+    "python-multipart==0.0.31",
     "starlette>=1.0.1",
 ]
 
