@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "FastAPI service and Celery worker for the production-rag-assistant project."
 requires-python = ">=3.12,<3.13"
 dependencies = [
-    "fastapi==0.140.13",
+    "fastapi==0.141.1",
     "uvicorn[standard]==0.52.0",
     "pydantic-settings==2.14.2",
     "SQLAlchemy==2.0.36",
