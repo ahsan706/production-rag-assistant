@@ -19,6 +19,12 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # Keep types and compiler aligned with the supported Node 22 / TypeScript 6 toolchain.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
     groups:
       next:
         patterns:
@@ -45,6 +51,9 @@ updates:
       # Block major/minor bumps so Dependabot doesn't fight the pin.
       - dependency-name: "python"
         update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      # Node 22 is the runtime pinned by package.json, CI, and the web image.
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
