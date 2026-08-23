@@ -5,7 +5,7 @@ description = "FastAPI service and Celery worker for the production-rag-assistan
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi==0.141.1",
-    "uvicorn[standard]==0.52.2",
+    "uvicorn[standard]==0.52.4",
     "pydantic-settings==2.15.0",
     "SQLAlchemy==2.0.36",
     "alembic==1.19.1",
@@ -13,7 +13,7 @@ dependencies = [
     "psycopg[binary]==3.3.4",
     "redis==5.2.1",
     "httpx==0.28.1",
-    "pypdf==6.15.0",
+    "pypdf==6.16.1",
     "python-multipart==0.0.32",
     "starlette>=1.4.1",
 ]
@@ -21,8 +21,8 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest==9.1.1",
-    "ruff==0.16.2",
-    "mypy==2.3.0",
+    "ruff==0.16.3",
+    "mypy==2.3.1",
     "celery-types>=0.26.0",
 ]
 
