@@ -96,7 +96,7 @@ def save_document_upload(db: Session, file: UploadFile) -> tuple[Document, bool]
 
         document = Document(
             id=document_id,
-            original_filename=file.filename,
+            original_filename=(file.filename or "")[:255],
             stored_filename=stored_filename,
             storage_path=str(storage_path),
             content_type=file.content_type or "application/octet-stream",

@@ -55,25 +55,9 @@ export default function DocumentDetailsPage() {
             </div>
             <dl className="mt-6 grid gap-4 md:grid-cols-2">
               <div>
-                <dt className="text-sm font-medium text-slate-500">Stored filename</dt>
-                <dd className="mt-1 font-mono text-sm text-slate-900">{document.stored_filename}</dd>
-              </div>
-              <div>
                 <dt className="text-sm font-medium text-slate-500">SHA-256</dt>
                 <dd className="mt-1 break-all font-mono text-sm text-slate-900">
                   {document.checksum_sha256}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-sm font-medium text-slate-500">Extracted text</dt>
-                <dd className="mt-1 break-all font-mono text-sm text-slate-900">
-                  {document.extracted_text_path ?? "Not available"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-sm font-medium text-slate-500">Chunking</dt>
-                <dd className="mt-1 break-all font-mono text-sm text-slate-900">
-                  {JSON.stringify(document.document_metadata.chunking ?? "Not available")}
                 </dd>
               </div>
               <div>
