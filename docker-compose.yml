@@ -1,4 +1,6 @@
 services:
+  # SECURITY: Override POSTGRES_PASSWORD (and optionally REDIS_PASSWORD) with strong values
+  # in a .env file before deploying to any non-local environment.
   postgres:
     image: postgres:16-alpine
     environment:
@@ -83,6 +85,7 @@ services:
       RETRIEVAL_MIN_SCORE: ${RETRIEVAL_MIN_SCORE:-0.45}
       AI_REQUEST_TIMEOUT_SECONDS: ${AI_REQUEST_TIMEOUT_SECONDS:-120}
       QDRANT_REQUEST_TIMEOUT_SECONDS: ${QDRANT_REQUEST_TIMEOUT_SECONDS:-20}
+      CORS_ORIGINS: ${CORS_ORIGINS:-["http://localhost:3000"]}
     ports:
       - "8000:8000"
     volumes:
@@ -154,6 +157,8 @@ services:
   web:
     build:
       context: ./apps/web
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
       NEXT_TELEMETRY_DISABLED: "1"

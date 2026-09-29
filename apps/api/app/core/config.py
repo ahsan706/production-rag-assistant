@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     retrieval_min_score: float = 0.45
     ai_request_timeout_seconds: float = 120.0
     qdrant_request_timeout_seconds: float = 20.0
+    cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
