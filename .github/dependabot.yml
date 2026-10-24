@@ -5,7 +5,16 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # Redis 8 currently requires a prerelease Kombu; revisit with stable support.
+      - dependency-name: "redis"
+        update-types: ["version-update:semver-major"]
     groups:
+      celery-redis:
+        patterns:
+          - "celery*"
+          - "kombu*"
+          - "redis"
       python-runtime:
         patterns:
           - "*"

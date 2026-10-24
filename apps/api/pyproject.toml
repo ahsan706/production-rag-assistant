@@ -4,16 +4,16 @@ version = "0.1.0"
 description = "FastAPI service and Celery worker for the production-rag-assistant project."
 requires-python = ">=3.12,<3.13"
 dependencies = [
-    "fastapi==0.141.1",
-    "uvicorn[standard]==0.53.0",
-    "pydantic-settings==2.15.0",
+    "fastapi==0.143.1",
+    "uvicorn[standard]==0.54.0",
+    "pydantic-settings==2.16.0",
     "SQLAlchemy==2.0.36",
     "alembic==1.20.0",
     "celery[redis]==5.6.3",
     "psycopg[binary]==3.3.6",
     "redis==5.2.1",
     "httpx==0.28.1",
-    "pypdf==6.19.0",
+    "pypdf==6.21.2",
     "python-multipart==0.0.32",
     "starlette>=1.4.1",
 ]
@@ -21,13 +21,15 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest==9.1.1",
-    "ruff==0.16.8",
-    "mypy==2.3.1",
+    "ruff==0.17.0",
+    "mypy==2.4.0",
     "celery-types>=0.26.0",
 ]
 
 [tool.uv]
 package = false
+# Redis upgrades must resolve against stable Celery/Kombu releases.
+prerelease = "disallow"
 
 [tool.ruff]
 line-length = 100
